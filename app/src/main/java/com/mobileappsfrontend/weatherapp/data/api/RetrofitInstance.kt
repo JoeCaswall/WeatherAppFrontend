@@ -9,7 +9,7 @@ object RetrofitInstance {
     private val client = OkHttpClient.Builder().build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://your-backend-url.com")
+        .baseUrl("https://localhost:8443")
         .client(client)
         .addConverterFactory(GsonConverterFactory.create())
         .build()

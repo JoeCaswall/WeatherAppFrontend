@@ -10,7 +10,8 @@ import com.mobileappsfrontend.weatherapp.ui.login.LoginViewModel
 
 @Composable
 fun AppNavHost(navController: NavHostController, loginViewModel: LoginViewModel) {
-    NavHost(navController, startDestination = "login") {
+    NavHost(
+        navController, startDestination = "login") {
 
         composable("login") {
             LoginScreen(
