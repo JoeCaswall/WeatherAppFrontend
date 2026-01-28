@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.mobileappsfrontend.weatherapp"
-    compileSdk = 36
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.mobileappsfrontend.weatherapp"
@@ -28,18 +28,26 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "11"
+
+    kotlin {
+        jvmToolchain(21)
     }
+
     buildFeatures {
         viewBinding = true
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
 }
 
 dependencies {
+//    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.9.24"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -80,8 +88,6 @@ dependencies {
 
     // DataStore
     implementation(libs.androidx.datastore.preferences)
-
-    // Navigation
 
 
 }

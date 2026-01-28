@@ -1,6 +1,7 @@
 package com.mobileappsfrontend.weatherapp.data.repository
 
 import com.mobileappsfrontend.weatherapp.data.api.AuthApi
+import com.mobileappsfrontend.weatherapp.data.local.preferences.UserPreferences
 import com.mobileappsfrontend.weatherapp.data.model.LoginRequest
 import com.mobileappsfrontend.weatherapp.domain.repository.AuthRepository
 
