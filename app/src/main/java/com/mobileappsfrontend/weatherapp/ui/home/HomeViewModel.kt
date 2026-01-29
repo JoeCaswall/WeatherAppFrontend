@@ -10,7 +10,7 @@ import com.mobileappsfrontend.weatherapp.domain.usecase.GetCurrentWeatherUseCase
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val getCurrentWeather: GetCurrentWeatherUseCase
+    private val getCurrentWeatherUseCase: GetCurrentWeatherUseCase
 ) : ViewModel() {
 
     var uiState by mutableStateOf<CurrentWeatherResponse?>(null)
@@ -28,13 +28,21 @@ class HomeViewModel(
 
     private fun loadWeather() {
         viewModelScope.launch {
+            println("HomeViewModel: loadWeather() started")
             try {
                 isLoading = true
                 errorMessage = null
-                uiState = getCurrentWeather()
+                println("HomeViewModel: calling use case…")
+
+                val result = getCurrentWeatherUseCase()
+                println("HomeViewModel: use case returned: $result")
+
+                uiState = result
             } catch (e: Exception) {
+                println("HomeViewModel: ERROR → ${e.message}")
                 errorMessage = e.message
             } finally {
+                println("HomeViewModel: loadWeather() finished")
                 isLoading = false
             }
         }

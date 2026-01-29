@@ -14,8 +14,14 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
     }
 
     suspend fun saveJwt(token: String) {
+        println("UserPreferences: saving JWT = $token")
         dataStore.edit { it[JWT] = token }
+        println("UserPreferences: saved")
     }
 
-    val jwtFlow = dataStore.data.map { it[JWT] }
+    val jwtFlow = dataStore.data.map {
+        println("UserPreferences: emitting JWT = ${it[JWT]}")
+        it[JWT]
+    }
+
 }
