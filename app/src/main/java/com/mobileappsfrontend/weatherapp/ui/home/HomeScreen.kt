@@ -8,19 +8,25 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.mobileappsfrontend.weatherapp.data.model.CurrentWeatherResponse
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel) {
+    println("HomeScreen: Composable STARTED")
     val weather = viewModel.uiState
+    val errorMessage = viewModel.errorMessage
+    val isLoading = viewModel.isLoading
 
-    if (weather == null) {
-        CircularProgressIndicator()
-        return
+    when {
+        isLoading -> CircularProgressIndicator()
+        errorMessage != null -> {
+            println("HomeScreen: ERROR → $errorMessage")
+            Text("Error: $errorMessage", color = Color.Red)
+        }
+        weather != null -> WeatherCard(weather)
     }
-
-    WeatherCard(weather)
 }
 
 @Composable

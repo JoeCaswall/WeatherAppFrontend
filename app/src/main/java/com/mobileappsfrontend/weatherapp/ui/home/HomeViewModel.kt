@@ -23,6 +23,7 @@ class HomeViewModel(
         private set
 
     init {
+        println("HomeViewModel: INIT")
         loadWeather()
     }
 

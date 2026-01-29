@@ -22,6 +22,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var homeViewModel: HomeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        println("MainActivity: onCreate STARTED")
         super.onCreate(savedInstanceState)
 
         // Shared DataStore + Preferences

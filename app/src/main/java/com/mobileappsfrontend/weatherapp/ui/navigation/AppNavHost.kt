@@ -1,6 +1,7 @@
 package com.mobileappsfrontend.weatherapp.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,6 +16,7 @@ fun AppNavHost(
     loginViewModel: LoginViewModel,
     homeViewModel: HomeViewModel
 ) {
+    println("NAVHOST: AppNavHost STARTED")
     NavHost(
         navController = navController,
         startDestination = "login"
@@ -28,9 +30,9 @@ fun AppNavHost(
         }
 
         composable("home") {
-            HomeScreen(
-                viewModel = homeViewModel
-            )
+            println("NAVHOST: Entered home route")
+            val homeViewModel: HomeViewModel = viewModel()
+            HomeScreen(viewModel = homeViewModel)
         }
     }
 }

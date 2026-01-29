@@ -16,6 +16,7 @@ class WeatherRepositoryImpl(
         println("Repo: JWT = $jwt")
 
         println("Repo: calling API…")
+        println("Bearer $jwt")
         val response = api.getCurrentWeather("Bearer $jwt")
         println("Repo: API returned")
 
