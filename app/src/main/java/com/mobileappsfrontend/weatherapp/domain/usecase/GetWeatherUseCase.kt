@@ -1,4 +1,9 @@
 package com.mobileappsfrontend.weatherapp.domain.usecase
 
-class GetWeatherUseCase {
+import com.mobileappsfrontend.weatherapp.data.repository.WeatherRepositoryImpl
+
+class GetCurrentWeatherUseCase(
+    private val repository: WeatherRepositoryImpl
+) {
+    suspend operator fun invoke() = repository.getCurrentWeather()
 }

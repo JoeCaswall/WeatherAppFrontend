@@ -6,11 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mobileappsfrontend.weatherapp.data.model.CurrentWeatherResponse
-import com.mobileappsfrontend.weatherapp.domain.repository.WeatherRepository
+import com.mobileappsfrontend.weatherapp.domain.usecase.GetCurrentWeatherUseCase
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val weatherRepository: WeatherRepository
+    private val getCurrentWeather: GetCurrentWeatherUseCase
 ) : ViewModel() {
 
     var uiState by mutableStateOf<CurrentWeatherResponse?>(null)
@@ -31,7 +31,7 @@ class HomeViewModel(
             try {
                 isLoading = true
                 errorMessage = null
-                uiState = weatherRepository.getCurrentWeather()
+                uiState = getCurrentWeather()
             } catch (e: Exception) {
                 errorMessage = e.message
             } finally {

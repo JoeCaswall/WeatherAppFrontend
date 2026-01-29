@@ -5,10 +5,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
 import com.mobileappsfrontend.weatherapp.data.api.RetrofitInstance
+import com.mobileappsfrontend.weatherapp.data.api.RetrofitInstance.weatherApi
 import com.mobileappsfrontend.weatherapp.data.local.preferences.UserPreferences
 import com.mobileappsfrontend.weatherapp.data.local.preferences.dataStore
 import com.mobileappsfrontend.weatherapp.data.repository.AuthRepositoryImpl
-import com.mobileappsfrontend.weatherapp.domain.repository.WeatherRepository
+import com.mobileappsfrontend.weatherapp.data.repository.WeatherRepositoryImpl
+import com.mobileappsfrontend.weatherapp.domain.usecase.GetCurrentWeatherUseCase
 import com.mobileappsfrontend.weatherapp.domain.usecase.LoginUseCase
 import com.mobileappsfrontend.weatherapp.ui.home.HomeViewModel
 import com.mobileappsfrontend.weatherapp.ui.login.LoginViewModel
@@ -32,9 +34,10 @@ class MainActivity : ComponentActivity() {
         loginViewModel = LoginViewModel(loginUseCase, prefs)
 
         // Home dependencies
-        val weatherApi = RetrofitInstance.weatherApi
-        val weatherRepo = WeatherRepository(weatherApi, prefs)
-        homeViewModel = HomeViewModel(weatherRepo)
+        val weatherRepo = WeatherRepositoryImpl(weatherApi, prefs)
+        val getCurrentWeatherUseCase = GetCurrentWeatherUseCase(weatherRepo)
+        homeViewModel = HomeViewModel(getCurrentWeatherUseCase)
+
 
         setContent {
             val navController = rememberNavController()
