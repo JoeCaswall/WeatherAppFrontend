@@ -5,13 +5,20 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mobileappsfrontend.weatherapp.ui.home.HomeScreen
+import com.mobileappsfrontend.weatherapp.ui.home.HomeViewModel
 import com.mobileappsfrontend.weatherapp.ui.login.LoginScreen
 import com.mobileappsfrontend.weatherapp.ui.login.LoginViewModel
 
 @Composable
-fun AppNavHost(navController: NavHostController, loginViewModel: LoginViewModel) {
+fun AppNavHost(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    homeViewModel: HomeViewModel
+) {
     NavHost(
-        navController, startDestination = "login") {
+        navController = navController,
+        startDestination = "login"
+    ) {
 
         composable("login") {
             LoginScreen(
@@ -21,7 +28,9 @@ fun AppNavHost(navController: NavHostController, loginViewModel: LoginViewModel)
         }
 
         composable("home") {
-            HomeScreen()
+            HomeScreen(
+                viewModel = homeViewModel
+            )
         }
     }
 }

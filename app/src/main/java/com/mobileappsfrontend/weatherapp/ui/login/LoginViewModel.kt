@@ -31,6 +31,8 @@ class LoginViewModel(
             isLoading = false
 
             if (result.isSuccess) {
+                val jwt = result.getOrNull()!! // your use case returns the token
+                userPreferences.saveJwt(jwt)
                 loginSuccess = true
             } else {
                 errorMessage = result.exceptionOrNull()?.message

@@ -5,41 +5,48 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.fragment.findNavController
 import com.mobileappsfrontend.weatherapp.R
+import com.mobileappsfrontend.weatherapp.data.model.CurrentWeatherResponse
 import com.mobileappsfrontend.weatherapp.databinding.FragmentSecondBinding
 
-/**
- * A simple [Fragment] subclass as the second destination in the navigation.
- */
-class HomeScreen : Fragment() {
+@Composable
+fun HomeScreen(viewModel: HomeViewModel) {
+    val weather = viewModel.uiState
 
-    private var _binding: FragmentSecondBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-
-        _binding = FragmentSecondBinding.inflate(inflater, container, false)
-        return binding.root
-
+    if (weather == null) {
+        CircularProgressIndicator()
+        return
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    WeatherCard(weather)
+}
 
-        binding.buttonSecond.setOnClickListener {
-            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+@Composable
+fun WeatherCard(weather: CurrentWeatherResponse) {
+    Card(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text("Temperature: ${weather.temp}°C")
+            Text("Feels like: ${weather.feelsLikeTemp}°C")
+            Text("Wind: ${weather.windDirection} ${weather.windSpeedKmh} km/h")
+            Text("Humidity: ${weather.humidity}%")
+            Text("Air Quality: ${weather.airQuality}")
+            Text("Sunrise: ${weather.sunriseTime}")
+            Text("Sunset: ${weather.sunsetTime}")
+            Text("Precipitation: ${weather.precipitation} mm")
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
