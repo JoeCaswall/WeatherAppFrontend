@@ -6,9 +6,9 @@ import com.mobileappsfrontend.weatherapp.domain.repository.WeatherRepository
 class GetCurrentWeatherUseCase(
     private val repository: WeatherRepository
 ) {
-    suspend operator fun invoke(): CurrentWeatherResponse
-    { println("UseCase: invoking repository.getCurrentWeather()")
-        val result = repository.getCurrentWeather()
+    suspend operator fun invoke(lat: Double, lon: Double): CurrentWeatherResponse {
+        println("UseCase: invoking repository.getCurrentWeather($lat, $lon)")
+        val result = repository.getCurrentWeather(lat, lon)
         println("UseCase: repository returned successfully")
         return result
     }

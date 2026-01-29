@@ -1,9 +1,9 @@
 package com.mobileappsfrontend.weatherapp.ui.home
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.ui.Alignment
 import androidx.compose.material3.Card
+import coil.compose.AsyncImage
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,20 +31,41 @@ fun HomeScreen(viewModel: HomeViewModel) {
 
 @Composable
 fun WeatherCard(weather: CurrentWeatherResponse) {
-    Card(
+    Box(
         modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text("Temperature: ${weather.temp}°C")
-            Text("Feels like: ${weather.feelsLikeTemp}°C")
-            Text("Wind: ${weather.windDirection} ${weather.windSpeedKmh} km/h")
-            Text("Humidity: ${weather.humidity}%")
-            Text("Air Quality: ${weather.airQuality}")
-            Text("Sunrise: ${weather.sunriseTime}")
-            Text("Sunset: ${weather.sunsetTime}")
-            Text("Precipitation: ${weather.precipitation} mm")
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(2f/3f)
+                .fillMaxHeight(1f/3f)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val iconCode = weather.conditions.icon
+                val iconUrl = "https://www.weatherbit.io/static/img/icons/${iconCode}.png"
+                AsyncImage(
+                    model = iconUrl,
+                    contentDescription = "Weather icon",
+                    modifier = Modifier.size(64.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(weather.cityName)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text("Temperature: ${weather.temp}°C")
+                Text("Feels like: ${weather.feelsLikeTemp}°C")
+                Text("Wind: ${weather.windSpeedKmh} km/h ${weather.windDirection}")
+                Text("Humidity: ${weather.humidity}%")
+                Text("Air Quality: ${weather.airQuality}")
+                Text("Sunrise: ${weather.sunriseTime}")
+                Text("Sunset: ${weather.sunsetTime}")
+                Text("Precipitation: ${weather.precipitation} mm")
+            }
         }
     }
 }

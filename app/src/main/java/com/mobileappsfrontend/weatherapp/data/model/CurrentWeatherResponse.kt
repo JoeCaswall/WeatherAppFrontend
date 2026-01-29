@@ -1,6 +1,7 @@
 package com.mobileappsfrontend.weatherapp.data.model
 
 data class CurrentWeatherResponse(
+    val cityName: String,
     val temp: Double,
     val feelsLikeTemp: Double,
     val windDirection: String,

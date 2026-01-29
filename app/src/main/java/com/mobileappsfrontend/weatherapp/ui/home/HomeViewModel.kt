@@ -5,12 +5,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import com.mobileappsfrontend.weatherapp.data.model.CurrentWeatherResponse
-import com.mobileappsfrontend.weatherapp.domain.usecase.GetCurrentWeatherUseCase
+import com.mobileappsfrontend.weatherapp.domain.repository.WeatherRepository
 import kotlinx.coroutines.launch
 
-class HomeViewModel(
-    private val getCurrentWeatherUseCase: GetCurrentWeatherUseCase
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val repository: WeatherRepository
 ) : ViewModel() {
 
     var uiState by mutableStateOf<CurrentWeatherResponse?>(null)
@@ -24,26 +27,22 @@ class HomeViewModel(
 
     init {
         println("HomeViewModel: INIT")
-        loadWeather()
+        loadWeatherForDefaultLocation()
     }
 
-    private fun loadWeather() {
+    private fun loadWeatherForDefaultLocation() {
         viewModelScope.launch {
-            println("HomeViewModel: loadWeather() started")
             try {
                 isLoading = true
                 errorMessage = null
-                println("HomeViewModel: calling use case…")
-
-                val result = getCurrentWeatherUseCase()
-                println("HomeViewModel: use case returned: $result")
-
+                // Fetch default location
+                val location = repository.getDefaultLocation()
+                // Fetch weather for that location
+                val result = repository.getCurrentWeather(location.latitude, location.longitude)
                 uiState = result
             } catch (e: Exception) {
-                println("HomeViewModel: ERROR → ${e.message}")
                 errorMessage = e.message
             } finally {
-                println("HomeViewModel: loadWeather() finished")
                 isLoading = false
             }
         }

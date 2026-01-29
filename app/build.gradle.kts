@@ -2,6 +2,14 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
+    id("org.jetbrains.kotlin.kapt")
+}
+
+configurations.all { resolutionStrategy.force("com.squareup:javapoet:1.13.0") }
+
+hilt {
+    enableAggregatingTask = false
 }
 
 android {
@@ -56,8 +64,6 @@ dependencies {
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
 
     // Room
     implementation(libs.androidx.room.runtime)
@@ -89,5 +95,11 @@ dependencies {
     // DataStore
     implementation(libs.androidx.datastore.preferences)
 
+    // Hilt
+    implementation("com.google.dagger:hilt-android:2.51")
+    kapt("com.google.dagger:hilt-android-compiler:2.51")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
+    // Coil for image loading
+    implementation("io.coil-kt:coil-compose:2.6.0")
 }
