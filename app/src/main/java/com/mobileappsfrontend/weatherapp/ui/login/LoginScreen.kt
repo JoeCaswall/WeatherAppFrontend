@@ -14,7 +14,7 @@ fun LoginScreen(
     viewModel: LoginViewModel,
     onLoginSuccess: () -> Unit
 ) {
-    val email = viewModel.email
+    val username = viewModel.username
     val password = viewModel.password
     val isLoading = viewModel.isLoading
     val errorMessage = viewModel.errorMessage
@@ -35,10 +35,14 @@ fun LoginScreen(
         Spacer(Modifier.height(24.dp))
 
         OutlinedTextField(
-            value = email,
-            onValueChange = { viewModel.email = it },
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth()
+            value = username,
+            onValueChange = { viewModel.username = it },
+            label = { Text("Username") },
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White
+            )
         )
 
         Spacer(Modifier.height(16.dp))
@@ -48,7 +52,11 @@ fun LoginScreen(
             onValueChange = { viewModel.password = it },
             label = { Text("Password") },
             modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation()
+            visualTransformation = PasswordVisualTransformation(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White
+            )
         )
 
         Spacer(Modifier.height(24.dp))

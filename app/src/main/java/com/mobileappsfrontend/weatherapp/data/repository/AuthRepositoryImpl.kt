@@ -11,9 +11,9 @@ class AuthRepositoryImpl(
     private val prefs: UserPreferences
 ) : AuthRepository {
 
-    override suspend fun login(email: String, password: String): Result<Unit> {
+    override suspend fun login(username: String, password: String): Result<Unit> {
         return try {
-            val response = api.login(LoginRequest(email, password))
+            val response = api.login(LoginRequest(username, password))
             prefs.saveJwt(response.token)
             Result.success(Unit)
         } catch (e: Exception) {
