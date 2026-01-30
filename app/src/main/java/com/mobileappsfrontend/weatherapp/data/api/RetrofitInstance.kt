@@ -1,18 +1,26 @@
 package com.mobileappsfrontend.weatherapp.data.api
 
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
 
-    private val client = OkHttpClient.Builder().build()
+    private val logging = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+
+    private val client = OkHttpClient.Builder()
+        .addInterceptor(logging)
+        .build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://your-backend-url.com")
+        .baseUrl("http://10.0.2.2:8080")
         .client(client)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
     val authApi: AuthApi = retrofit.create(AuthApi::class.java)
+    val weatherApi: WeatherApi = retrofit.create(WeatherApi::class.java)
 }

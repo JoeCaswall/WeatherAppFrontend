@@ -1,5 +1,5 @@
 package com.mobileappsfrontend.weatherapp.domain.repository
 
 interface AuthRepository {
-    suspend fun login(email: String, password: String): Result<Unit>
+    suspend fun login(username: String, password: String): Result<String>
 }
