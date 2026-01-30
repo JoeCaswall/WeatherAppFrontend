@@ -8,12 +8,15 @@ import retrofit2.converter.gson.GsonConverterFactory
 import android.content.Context
 import com.mobileappsfrontend.weatherapp.data.api.AuthApi
 import com.mobileappsfrontend.weatherapp.data.api.DefaultLocationApi
+import com.mobileappsfrontend.weatherapp.data.api.FavouritesApi
 import com.mobileappsfrontend.weatherapp.data.api.WeatherApi
 import com.mobileappsfrontend.weatherapp.data.local.preferences.UserPreferences
 import com.mobileappsfrontend.weatherapp.data.local.preferences.dataStore
 import com.mobileappsfrontend.weatherapp.data.repository.AuthRepositoryImpl
+import com.mobileappsfrontend.weatherapp.data.repository.FavouriteRepositoryImpl
 import com.mobileappsfrontend.weatherapp.data.repository.WeatherRepositoryImpl
 import com.mobileappsfrontend.weatherapp.domain.repository.AuthRepository
+import com.mobileappsfrontend.weatherapp.domain.repository.FavouriteRepository
 import com.mobileappsfrontend.weatherapp.domain.repository.WeatherRepository
 import com.mobileappsfrontend.weatherapp.domain.usecase.GetCurrentWeatherUseCase
 import com.mobileappsfrontend.weatherapp.domain.usecase.LoginUseCase
@@ -105,6 +108,14 @@ object AppModule {
     @Singleton
     fun provideFavouriteLocationApi(
         retrofit: Retrofit
-    ): DefaultLocationApi =
-        retrofit.create(DefaultLocationApi::class.java)
+    ): FavouritesApi =
+        retrofit.create(FavouritesApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideFavouritesRepository(
+        api: FavouritesApi,
+        prefs: UserPreferences
+    ): FavouriteRepository =
+        FavouriteRepositoryImpl(api, prefs)
 }
