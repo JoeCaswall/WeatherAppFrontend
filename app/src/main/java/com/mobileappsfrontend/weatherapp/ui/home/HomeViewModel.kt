@@ -10,18 +10,38 @@ import javax.inject.Inject
 import com.mobileappsfrontend.weatherapp.data.model.CurrentWeatherResponse
 import com.mobileappsfrontend.weatherapp.domain.repository.WeatherRepository
 import com.mobileappsfrontend.weatherapp.domain.repository.SearchRepository
+import com.mobileappsfrontend.weatherapp.domain.repository.FavouriteRepository
 import com.mobileappsfrontend.weatherapp.data.local.preferences.UserPreferences
 import com.mobileappsfrontend.weatherapp.data.model.FavouriteLocationDto
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-
 class HomeViewModel @Inject constructor(
     private val repository: WeatherRepository,
     private val searchRepository: SearchRepository,
+    private val favouriteRepository: FavouriteRepository,
     private val userPreferences: UserPreferences
 ) : ViewModel() {
+    var addFavouriteLoading by mutableStateOf(false)
+        private set
+    var addFavouriteError by mutableStateOf<String?>(null)
+        private set
+
+    fun addToFavourites(location: FavouriteLocationDto, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            addFavouriteLoading = true
+            addFavouriteError = null
+            try {
+                favouriteRepository.addToFavourites(location)
+                onSuccess()
+            } catch (e: Exception) {
+                addFavouriteError = e.message
+            } finally {
+                addFavouriteLoading = false
+            }
+        }
+    }
 
     var uiState by mutableStateOf<CurrentWeatherResponse?>(null)
         private set
@@ -45,6 +65,7 @@ class HomeViewModel @Inject constructor(
         println("HomeViewModel: INIT")
         loadWeatherForDefaultLocation()
     }
+
     fun searchLocations(query: String) {
         viewModelScope.launch {
             isSearchLoading = true

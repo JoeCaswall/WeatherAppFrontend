@@ -15,4 +15,14 @@ class FavouriteRepositoryImpl @Inject constructor(
         val token = prefs.jwtFlow.first()
         return api.getFavourites(authHeader = "Bearer $token")
     }
+
+    override suspend fun addToFavourites(location: FavouriteLocationDto) {
+        val token = prefs.jwtFlow.first()
+        api.addToFavourites(authHeader = "Bearer $token", req = location)
+    }
+
+    override suspend fun deleteFavourite(id: Int) {
+        val token = prefs.jwtFlow.first()
+        api.deleteFavourite(id = id, authHeader = "Bearer $token")
+    }
 }

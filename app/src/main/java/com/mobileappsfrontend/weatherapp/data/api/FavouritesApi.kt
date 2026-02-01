@@ -19,7 +19,7 @@ interface FavouritesApi {
         @Header("Authorization") authHeader: String,
         @Body req: FavouriteLocationDto)
 
-    @DELETE("api/favourites/delete")
+    @DELETE("api/favourites")
     suspend fun deleteFavourite(
         @Query("id") id: Int,
         @Header("Authorization") authHeader: String
