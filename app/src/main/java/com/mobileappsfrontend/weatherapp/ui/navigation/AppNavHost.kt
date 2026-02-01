@@ -41,10 +41,8 @@ fun AppNavHost(
                 startDestination = "login"
             ) {
                 composable("login") {
-                    val loginViewModel: LoginViewModel = hiltViewModel()
-                    LoginScreen(
-                        viewModel = loginViewModel,
-                        onLoginSuccess = { navController.navigate("home") }
+                    com.mobileappsfrontend.weatherapp.ui.login.AuthScreen(
+                        onAuthSuccess = { navController.navigate("home") }
                     )
                 }
                 composable("home") {

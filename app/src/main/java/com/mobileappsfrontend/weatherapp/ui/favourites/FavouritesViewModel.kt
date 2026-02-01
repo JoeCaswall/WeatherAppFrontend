@@ -13,10 +13,10 @@ import javax.inject.Inject
 @HiltViewModel
 class FavouritesViewModel @Inject constructor(
     private val repository: FavouriteRepository,
-    val weatherRepository: WeatherRepository
-) : ViewModel() {
     val weatherRepositoryGetter: WeatherRepository
-        get() = this.weatherRepository
+) : ViewModel() {
+    val weatherRepository: WeatherRepository
+        get() = this.weatherRepositoryGetter
     var favourites = mutableStateOf<List<FavouriteLocationDto>>(emptyList())
         private set
     var isLoading = mutableStateOf(false)

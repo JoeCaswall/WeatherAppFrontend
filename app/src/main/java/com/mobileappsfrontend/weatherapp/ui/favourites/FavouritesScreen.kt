@@ -69,7 +69,7 @@ fun FavouriteCard(
         isLoading = true
         error = null
         try {
-            weather = viewModel.weatherRepository.getCurrentWeather(fav.latitude, fav.longitude)
+            weather = viewModel.weatherRepositoryGetter.getCurrentWeather(fav.latitude, fav.longitude)
             println("Sending current weather request for city: ${fav.cityName}, lat: ${fav.latitude}, longitude: ${fav.longitude}")
         } catch (e: Exception) {
             error = e.message

@@ -6,6 +6,9 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "current_weather")
 data class CurrentWeatherEntity(
     @PrimaryKey
+    // Same ID means cache only ever has one item in it and so can be referenced offline
+    // (no defaultLocation backend call)
+    val id: Int = 0,
     val cityName: String,
 
     val temp: Double,
@@ -21,7 +24,8 @@ data class CurrentWeatherEntity(
     val precipitation: Double,
 
     // Flattened WeatherbitCurrentConditions object from DTO
-    val conditionsCode: Int,
     val conditionsIcon: String,
-    val conditionsDescription: String
+    val conditionsDescription: String,
+
+    val lastUpdatedEpochMillis: Long
 )

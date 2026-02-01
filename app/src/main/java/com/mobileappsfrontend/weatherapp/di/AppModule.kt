@@ -6,20 +6,27 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 import android.content.Context
+import androidx.room.Room
+import com.mobileappsfrontend.weatherapp.data.local.db.AppDatabase
+import com.mobileappsfrontend.weatherapp.data.local.dao.CurrentWeatherDao
 import com.mobileappsfrontend.weatherapp.data.api.AuthApi
 import com.mobileappsfrontend.weatherapp.data.api.DefaultLocationApi
 import com.mobileappsfrontend.weatherapp.data.api.FavouritesApi
 import com.mobileappsfrontend.weatherapp.data.api.WeatherApi
+import com.mobileappsfrontend.weatherapp.data.api.SearchApi
 import com.mobileappsfrontend.weatherapp.data.local.preferences.UserPreferences
 import com.mobileappsfrontend.weatherapp.data.local.preferences.dataStore
 import com.mobileappsfrontend.weatherapp.data.repository.AuthRepositoryImpl
 import com.mobileappsfrontend.weatherapp.data.repository.FavouriteRepositoryImpl
 import com.mobileappsfrontend.weatherapp.data.repository.WeatherRepositoryImpl
+import com.mobileappsfrontend.weatherapp.data.repository.SearchRepositoryImpl
 import com.mobileappsfrontend.weatherapp.domain.repository.AuthRepository
 import com.mobileappsfrontend.weatherapp.domain.repository.FavouriteRepository
 import com.mobileappsfrontend.weatherapp.domain.repository.WeatherRepository
+import com.mobileappsfrontend.weatherapp.domain.repository.SearchRepository
 import com.mobileappsfrontend.weatherapp.domain.usecase.GetCurrentWeatherUseCase
 import com.mobileappsfrontend.weatherapp.domain.usecase.LoginUseCase
+import com.mobileappsfrontend.weatherapp.domain.usecase.SignupUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -58,17 +65,33 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideSearchApi(retrofit: Retrofit): SearchApi =
+        retrofit.create(SearchApi::class.java)
+
+    @Provides
+    @Singleton
     fun provideUserPreferences(@ApplicationContext app: Context): UserPreferences {
         return UserPreferences(app.dataStore)
     }
 
     @Provides
     @Singleton
+    fun provideAppDatabase(@ApplicationContext app: Context): AppDatabase =
+        Room.databaseBuilder(app, AppDatabase::class.java, "weather_db").build()
+
+    @Provides
+    @Singleton
+    fun provideCurrentWeatherDao(db: AppDatabase): CurrentWeatherDao =
+        db.currentWeatherDao()
+
+    @Provides
+    @Singleton
     fun provideWeatherRepository(
         api: WeatherApi,
         defaultLocationApi: DefaultLocationApi,
-        prefs: UserPreferences
-    ): WeatherRepository = WeatherRepositoryImpl(api, defaultLocationApi, prefs)
+        prefs: UserPreferences,
+        weatherDao: CurrentWeatherDao
+    ): WeatherRepository = WeatherRepositoryImpl(api, defaultLocationApi, prefs, weatherDao)
 
     @Provides
     @Singleton
@@ -118,4 +141,16 @@ object AppModule {
         prefs: UserPreferences
     ): FavouriteRepository =
         FavouriteRepositoryImpl(api, prefs)
+
+    @Provides
+    @Singleton
+    fun provideSignupUseCase(authRepository: AuthRepository): SignupUseCase =
+        SignupUseCase(authRepository)
+
+    @Provides
+    @Singleton
+    fun provideSearchRepository(
+        searchApi: SearchApi
+    ): SearchRepository = SearchRepositoryImpl(searchApi)
+
 }
