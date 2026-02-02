@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -41,15 +42,13 @@ fun AppNavHost(
                 startDestination = "login"
             ) {
                 composable("login") {
-                    val loginViewModel: LoginViewModel = hiltViewModel()
-                    LoginScreen(
-                        viewModel = loginViewModel,
-                        onLoginSuccess = { navController.navigate("home") }
+                    com.mobileappsfrontend.weatherapp.ui.login.AuthScreen(
+                        onAuthSuccess = { navController.navigate("home") }
                     )
                 }
                 composable("home") {
                     val homeViewModel: HomeViewModel = hiltViewModel()
-                    HomeScreen(viewModel = homeViewModel)
+                    HomeScreen(viewModel = homeViewModel, navController = navController)
                 }
                 composable("favourites") {
                     val favouritesViewModel: FavouritesViewModel = hiltViewModel()
@@ -71,7 +70,19 @@ fun AppNavHost(
                 }
             }
         }
-        FooterTabBar(navController = navController)
+
+        // Track navigation changes to update footer visibility and route
+        val currentRouteState = androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(navController.currentBackStackEntry?.destination?.route) }
+        androidx.compose.runtime.LaunchedEffect(navController) {
+            navController.currentBackStackEntryFlow.collect { entry ->
+                currentRouteState.value = entry.destination.route
+            }
+        }
+        val currentRoute = currentRouteState.value
+        println("***********CURRENT ROUTE: $currentRoute *******************")
+        if (currentRoute == "home" || currentRoute == "favourites") {
+            FooterTabBar(navController = navController)
+        }
     }
 }
 
@@ -111,12 +122,16 @@ fun FooterTabBar(navController: NavHostController) {
 
 @Composable
 fun TabButton(text: String, selected: Boolean, onClick: () -> Unit) {
-    val background = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f) else Color.Transparent
-    val contentColor = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+    val background = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent
+    val contentColor = if (selected) Color.White else MaterialTheme.colorScheme.onSurface
     Box(
         modifier = Modifier
             .fillMaxHeight()
-            .background(background)
+            .background(
+                color = background,
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(50)
+            )
+            .padding(horizontal = 12.dp, vertical = 8.dp)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {

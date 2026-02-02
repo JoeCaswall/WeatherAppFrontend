@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.mobileappsfrontend.weatherapp.data.model.CurrentWeatherResponse
@@ -69,7 +70,7 @@ fun FavouriteCard(
         isLoading = true
         error = null
         try {
-            weather = viewModel.weatherRepository.getCurrentWeather(fav.latitude, fav.longitude)
+            weather = viewModel.weatherRepositoryGetter.getCurrentWeather(fav.latitude, fav.longitude)
             println("Sending current weather request for city: ${fav.cityName}, lat: ${fav.latitude}, longitude: ${fav.longitude}")
         } catch (e: Exception) {
             error = e.message
@@ -87,28 +88,54 @@ fun FavouriteCard(
         modifier = Modifier
             .fillMaxWidth()
             .height(140.dp)
-            .clickable { onClick() }
             .padding(4.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            when {
-                isLoading -> CircularProgressIndicator(modifier = Modifier.size(24.dp))
-                error != null -> Text("Error", color = androidx.compose.ui.graphics.Color.Red)
-                weather != null -> {
-                    val iconCode = weather!!.conditions.icon
-                    val iconUrl = "https://www.weatherbit.io/static/img/icons/${iconCode}.png"
-                    AsyncImage(
-                        model = iconUrl,
-                        contentDescription = "Weather icon",
-                        modifier = Modifier.size(40.dp)
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(fav.cityName)
-                    Text("Temp: ${weather!!.temp}°C")
-                    Text("Precip: ${weather!!.precipitation} mm")
+        Box(modifier = Modifier.fillMaxSize()) {
+            // Bin icon button (absolute top right, not overlapped)
+            androidx.compose.material3.IconButton(
+                onClick = { viewModel.removeFavourite(fav.id) },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .zIndex(2f) // Puts bin on top
+            ) {
+                androidx.compose.material3.Icon(
+                    painter = androidx.compose.ui.res.painterResource(id = com.mobileappsfrontend.weatherapp.R.drawable.ic_delete),
+                    contentDescription = "Remove from favourites"
+                )
+            }
+            // Main content, only this area is clickable for navigation
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .align(Alignment.Center)
+                        .clickable(
+                            onClick = onClick,
+                            indication = null,
+                            interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+                        ),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    when {
+                        isLoading -> CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                        error != null -> Text("Error", color = androidx.compose.ui.graphics.Color.Red)
+                        weather != null -> {
+                            val iconCode = weather!!.conditions.icon
+                            val iconUrl = "https://www.weatherbit.io/static/img/icons/${iconCode}.png"
+                            AsyncImage(
+                                model = iconUrl,
+                                contentDescription = "Weather icon",
+                                modifier = Modifier.size(40.dp)
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(fav.cityName)
+                            Text("Temp: ${weather!!.temp}°C")
+                            Text("Precip: ${weather!!.precipitation} mm")
+                        }
+                    }
                 }
             }
         }

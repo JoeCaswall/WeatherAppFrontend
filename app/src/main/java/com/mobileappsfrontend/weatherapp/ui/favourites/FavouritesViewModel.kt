@@ -9,22 +9,19 @@ import com.mobileappsfrontend.weatherapp.domain.repository.WeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 @HiltViewModel
 class FavouritesViewModel @Inject constructor(
     private val repository: FavouriteRepository,
-    val weatherRepository: WeatherRepository
-) : ViewModel() {
     val weatherRepositoryGetter: WeatherRepository
-        get() = this.weatherRepository
+) : ViewModel() {
+    val weatherRepository: WeatherRepository
+        get() = this.weatherRepositoryGetter
     var favourites = mutableStateOf<List<FavouriteLocationDto>>(emptyList())
         private set
     var isLoading = mutableStateOf(false)
         private set
     var errorMessage = mutableStateOf<String?>(null)
         private set
-
-
     fun loadFavourites() {
         viewModelScope.launch {
             isLoading.value = true
@@ -35,6 +32,17 @@ class FavouritesViewModel @Inject constructor(
                 errorMessage.value = e.message
             } finally {
                 isLoading.value = false
+            }
+        }
+    }
+
+    fun removeFavourite(id: Int) {
+        viewModelScope.launch {
+            try {
+                repository.deleteFavourite(id)
+                favourites.value = favourites.value.filterNot { it.id == id }
+            } catch (e: Exception) {
+                errorMessage.value = e.message
             }
         }
     }
