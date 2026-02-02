@@ -14,8 +14,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mobileappsfrontend.weatherapp.data.model.CurrentWeatherResponse
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.mobileappsfrontend.weatherapp.data.repository.WeatherRepositoryImpl
-import com.mobileappsfrontend.weatherapp.domain.repository.WeatherRepository
 
 @Composable
 fun FavouriteDetailsScreen(

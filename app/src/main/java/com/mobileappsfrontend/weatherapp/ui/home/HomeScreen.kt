@@ -8,6 +8,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Button
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -44,9 +45,10 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavHostController) {
             value = searchQuery,
             onValueChange = { searchQuery = it },
             label = { Text("Search for a location") },
+            textStyle = LocalTextStyle.current.copy(color = Color.White),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 48.dp)
+                .padding(top = 48.dp),
         )
         Spacer(modifier = Modifier.height(8.dp))
         Button(
