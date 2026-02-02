@@ -30,7 +30,11 @@ fun LoginScreen(
             .padding(24.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        Text("Welcome Back", style = MaterialTheme.typography.headlineMedium)
+        Text(
+            "Welcome Back",
+            style = MaterialTheme.typography.headlineMedium,
+            color = Color.White
+        )
 
         Spacer(Modifier.height(24.dp))
 
